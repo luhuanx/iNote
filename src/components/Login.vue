@@ -45,6 +45,9 @@
 </template>
 
 <script>
+
+import request from '@/helpers/request'
+
 export default {
   name: 'Login',
   data () {
@@ -103,6 +106,13 @@ export default {
       this.login.isError = false
       this.login.notice = ''
       console.log(`start login...,username:${this.login.username},password:${this.login.password}`)
+      request('/auth/login', 'POST', {
+        username: this.login.username,
+        password: this.login.username
+      })
+        .then(data => {
+          console.log(data)
+        })
     }
   }
 }

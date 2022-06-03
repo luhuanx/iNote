@@ -9,8 +9,7 @@
       <router-link to="/trash/2"
                    title="笔记"><i class="iconfont icon-trash"></i></router-link>
     </div>
-    <div class="logout"
-         @click="onLogout">
+    <div class="logout">
       <i class="iconfont icon-logout"></i>
     </div>
   </div>
