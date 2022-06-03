@@ -10,16 +10,27 @@
                    title="笔记"><i class="iconfont icon-trash"></i></router-link>
     </div>
     <div class="logout">
-      <i class="iconfont icon-logout"></i>
+      <i class="iconfont icon-logout"
+         @click="logout"></i>
     </div>
   </div>
 </template>
 
 <script>
 import avatar from './Avatar.vue'
-export default {
-  components: { avatar }
+import auth from '@/apis/auth'
 
+export default {
+  components: { avatar },
+
+  methods: {
+    logout () {
+      auth.logout()
+        .then(data => {
+          console.log(data)
+        })
+    }
+  }
 }
 </script>
 
