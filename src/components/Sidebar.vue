@@ -18,14 +18,14 @@
 
 <script>
 import avatar from './Avatar.vue'
-import auth from '@/apis/auth'
+import Auth from '@/apis/auth'
 
 export default {
   components: { avatar },
 
   methods: {
     logout () {
-      auth.logout()
+      Auth.logout()
         .then(data => {
           this.$router.push({ path: 'login' })
         })

@@ -1,15 +1,31 @@
 <template>
-  <span :title="user.username">{{slug}}</span>
+  <span :title="username">{{slug}}</span>
 </template>
 
 <script>
+import auth from '@/apis/auth'
+import Bus from '@/helpers/bus'
+
 export default {
   data () {
     return {
-      user: {
-        username: 'lucky'
-      },
-      slug: 'L'
+      username: '未登录'
+    }
+  },
+  created () {
+    Bus.$on('userInfo', user => {
+      this.username = user.username
+    })
+    auth.getInfo()
+      .then(res => {
+        if (res.isLogin) {
+          this.username = res.data.username
+        }
+      })
+  },
+  computed: {
+    slug () {
+      return this.username.charAt(0)
     }
   }
 }

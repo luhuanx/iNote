@@ -45,12 +45,8 @@
 </template>
 
 <script>
-
-import auth from '@/apis/auth'
-
-auth.getInfo().then(data => {
-  console.log(data)
-})
+import Auth from '@/apis/auth'
+import Bus from '@/helpers/bus'
 
 export default {
   name: 'Login',
@@ -95,13 +91,14 @@ export default {
       this.register.isError = false
       this.register.notice = ''
       console.log(`start register...,username:${this.register.username},password:${this.register.password}`)
-      auth.register({
+      Auth.register({
         username: this.register.username,
         password: this.register.password
       })
         .then(data => {
           this.register.isError = false
           this.register.notice = ''
+          Bus.$emit('userInfo', { username: this.login.username })
           this.$router.push({ path: 'notebooks' })
         }).catch(data => {
           this.register.isError = true
@@ -121,13 +118,14 @@ export default {
       }
 
       console.log(`start login...,username:${this.login.username},password:${this.login.password}`)
-      auth.login({
+      Auth.login({
         username: this.login.username,
         password: this.login.password
       })
         .then(data => {
           this.login.isError = false
           this.login.notice = ''
+          Bus.$emit('userInfo', { username: this.login.username })
           this.$router.push({ path: 'notebooks' })
         }).catch(data => {
           this.login.isError = true
