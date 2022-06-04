@@ -58,35 +58,46 @@ export default {
 
   methods: {
     onCreate () {
-      let title = window.prompt('创建笔记本')
-      if (title.trim() === '') {
-        alert('笔记本名不能为空')
-        return
-      }
-      Notebooks.addNotebook({ title })
-        .then(res => {
-          res.data.friendlyCreatedAt = friendlyDate(res.data.createdAt)
-          this.notebooks.unshift(res.data)
-          alert(res.msg)
-        })
+      this.$prompt('请输入笔记本标题', '创建笔记本', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /^.{1,30}$/,
+        inputErrorMessage: '标题不能为空，且不超过30个字符'
+      }).then(({ value }) => {
+        return Notebooks.addNotebook({ title: value })
+      }).then(res => {
+        res.data.friendlyCreatedAt = friendlyDate(res.data.createdAt)
+        this.notebooks.unshift(res.data)
+        this.$message.success(res.msg)
+      })
     },
     onEdit (notebook) {
-      let title = window.prompt('修改标题', notebook.title)
-      Notebooks.updateNotebook(notebook.id, { title })
-        .then(res => {
-          alert(res.msg)
-          notebook.title = title
-        })
+      let title = ''
+      this.$prompt('请输入笔记本标题', '修改笔记本', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /^.{1,30}$/,
+        inputValue: notebook.title,
+        inputErrorMessage: '标题不能为空，且不超过30个字符'
+      }).then(({ value }) => {
+        title = value
+        return Notebooks.updateNotebook(notebook.id, { title })
+      }).then(res => {
+        notebook.title = title
+        this.$message.success(res.msg)
+      })
     },
     onDelete (notebook) {
-      let isConfirm = window.confirm('你确定要删除吗')
-      if (isConfirm) {
-        Notebooks.deleteNotebook(notebook.id)
-          .then(res => {
-            this.notebooks.splice(this.notebooks.indexOf(notebook), 1)
-            alert(res.msg)
-          })
-      }
+      this.$confirm('确认删除笔记本吗?', '删除笔记本', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        return Notebooks.deleteNotebook(notebook.id)
+      }).then(res => {
+        this.notebooks.splice(this.notebooks.indexOf(notebook), 1)
+        this.$message.success(res.msg)
+      })
     }
   }
 }

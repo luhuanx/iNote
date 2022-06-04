@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {Message} from 'element-ui'
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 axios.defaults.baseURL = 'https://note-server.hunger-valley.com/'
@@ -22,12 +23,12 @@ export default function request (url, type = 'GET', data = {}) {
       if (res.status === 200) {
         resolve(res.data)
       } else {
-        console.error(res.data)
+        Message.error(res.data.msg)
         reject(res.data)
       }
     // eslint-disable-next-line handle-callback-err
     }).catch(err => {
-      console.error({msg: '网络异常'})
+      Message.error('网络异常')
       // eslint-disable-next-line prefer-promise-reject-errors
       reject({msg: '网络异常'})
     })
