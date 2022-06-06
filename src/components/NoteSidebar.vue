@@ -31,40 +31,34 @@
 </template>
 
 <script>
+import Notebooks from '@/apis/notebooks'
+import Notes from '@/apis/notes'
 
 export default {
   name: 'NoteSidebar',
 
+  created () {
+    Notebooks.getAll()
+      .then(res => {
+        this.notebooks = res.data
+      })
+  },
+
   data () {
     return {
-      notebooks: [
-        {
-          id: 1,
-          title: 'hello1'
-        },
-        {
-          id: 2,
-          title: 'hello2'
-        }
-      ],
-      notes: [
-        {
-          id: 11,
-          title: '第1个笔记',
-          updateAtFriendly: '3分钟前'
-        },
-        {
-          id: 22,
-          title: '第2个笔记',
-          updateAtFriendly: '5分钟前'
-        }
-      ]
+      notebooks: [],
+      notes: []
     }
   },
 
   methods: {
-    handleCommand (command) {
-      console.log(command)
+    handleCommand (notebookId) {
+      if (notebookId !== 'trash') {
+        Notes.getAll({ notebookId })
+          .then(res => {
+            this.notes = res.data
+          })
+      }
     }
   }
 }
