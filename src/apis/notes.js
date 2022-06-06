@@ -2,10 +2,10 @@ import request from '@/helpers/request'
 import { friendlyDate } from '@/helpers/util'
 
 const URL = {
-  GET: '/note/from/:notebookId',
-  ADD: '/note/to/:notebookId',
-  UPDATE: '/note/:noteId',
-  DELETE: '/note/:noteId'
+  GET: '/notes/from/:notebookId',
+  ADD: '/notes/to/:notebookId',
+  UPDATE: '/notes/:noteId',
+  DELETE: '/notes/:noteId'
 }
 
 export default {
@@ -18,7 +18,7 @@ export default {
             note.updatedAtFriendly = friendlyDate(note.updatedAt)
             return note
           }).sort((note1, note2) => {
-            return note1.updatedAt < note2.updatedAt
+            return note1.updatedAt < note2.updatedAt ? 1 : -1
           })
           resolve(res)
         }).catch(err => {
@@ -27,7 +27,7 @@ export default {
     })
   },
 
-  updateNote (noteId, {title, content}) {
+  updateNote ({noteId}, {title, content}) {
     return request(URL.UPDATE.replace(':noteId', noteId), 'PATCH', {title, content})
   },
 
@@ -36,6 +36,15 @@ export default {
   },
 
   addNote ({notebookId}, {title = '', content = ''} = {title: '', content: ''}) {
-    return request(URL.ADD.replace(':notebookId', notebookId), 'POST', {title, content})
+    return new Promise((resolve, reject) => {
+      request(URL.ADD.replace(':notebookId', notebookId), 'POST', { title, content })
+        .then(res => {
+          res.data.createdAtFriendly = friendlyDate(res.data.createdAt)
+          res.data.updatedAtFriendly = friendlyDate(res.data.updatedAt)
+          resolve(res)
+        }).catch(err => {
+          reject(err)
+        })
+    })
   }
 }

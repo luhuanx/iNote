@@ -5,7 +5,7 @@
                  @command="handleCommand"
                  placement="bottom">
       <span class="el-drop-link">
-        我的笔记本1 <i class="iconfont icon-down"></i>
+        {{curBook.title}} <i class="iconfont icon-down"></i>
       </span>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item v-for="notebook in notebooks"
@@ -21,8 +21,8 @@
     <ul class="notes">
       <li v-for="note in notes"
           :key="note.id">
-        <router-link :to="`/note?noteId=${note.id}`">
-          <span class="date">{{note.updateAtFriendly}}</span>
+        <router-link :to="`/note?noteId=${note.id}&notebookId=${curBook.id}`">
+          <span class="date">{{note.updatedAtFriendly}}</span>
           <span class="title">{{note.title}}</span>
         </router-link>
       </li>
@@ -36,29 +36,36 @@ import Notes from '@/apis/notes'
 
 export default {
   name: 'NoteSidebar',
+  data () {
+    return {
+      notebooks: [],
+      notes: [],
+      curBook: {}
+    }
+  },
 
   created () {
     Notebooks.getAll()
       .then(res => {
         this.notebooks = res.data
+        this.curBook = this.notebooks.find(notebook => notebook.id.toString() === this.$route.query.notebookId.toString()) ||
+          this.notebooks[0] || {}
+        return Notes.getAll({ notebookId: this.curBook.id })
+          .then(res => {
+            this.notes = res.data
+          })
       })
-  },
-
-  data () {
-    return {
-      notebooks: [],
-      notes: []
-    }
   },
 
   methods: {
     handleCommand (notebookId) {
-      if (notebookId !== 'trash') {
-        Notes.getAll({ notebookId })
-          .then(res => {
-            this.notes = res.data
-          })
+      if (notebookId === 'trash') {
+        return this.$router.push({ path: '/trash' })
       }
+      Notes.getAll({ notebookId })
+        .then(res => {
+          this.notes = res.data
+        })
     }
   }
 }
