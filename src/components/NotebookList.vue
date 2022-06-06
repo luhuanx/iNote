@@ -12,7 +12,7 @@
         <div class="book-list">
           <router-link v-for="notebook in notebooks"
                        :key="notebook.id"
-                       to="/note/1"
+                       :to="`/note?notebookId=${notebook.id}`"
                        class="notebook">
             <div>
               <span class="iconfont icon-notebook"></span>{{notebook.title}}
