@@ -9,21 +9,28 @@
         <div class="note-bar">
           <span>创建日期：{{curNote.createdAtFriendly}}</span>
           <span>更新日期：{{curNote.updatedAtFriendly}}</span>
-          <span>{{curNote.statusText}}</span>
-          <span class="iconfont icon-delete"></span>
-          <span class="iconfont icon-fullscreen"></span>
+          <span>{{statusText}}</span>
+          <span class="iconfont icon-delete"
+                @click="deleteNote"></span>
+          <span class="iconfont icon-fullscreen"
+                @click="isShowPreview=!isShowPreview"></span>
         </div>
         <div class="note-title">
           <input type="text"
-                 v-model:value="curNote.title"
+                 @input="updateNote"
+                 @keydown="statusText='正在输入...'"
+                 v-model="curNote.title"
                  placeholder="输入标题">
         </div>
         <div class="editor">
-          <textarea v-show="true"
-                    :value="curNote.content"
+          <textarea v-show="!isShowPreview"
+                    @input="updateNote"
+                    @keydown="statusText='正在输入...'"
+                    v-model="curNote.content"
                     placeholder="输入内容，支持 markdown 语法"></textarea>
           <div class="preview markdown-body"
-               v-show="false"></div>
+               v-html="previewContent"
+               v-show="isShowPreview"></div>
         </div>
       </div>
     </div>
@@ -34,6 +41,11 @@
 import Auth from '@/apis/auth'
 import NoteSidebar from '@/components/NoteSidebar'
 import Bus from '@/helpers/bus'
+import _ from 'lodash'
+import Notes from '@/apis/notes'
+import MarkdownIt from 'markdown-it'
+
+let md = MarkdownIt()
 
 export default {
   components: {
@@ -43,7 +55,9 @@ export default {
   data () {
     return {
       curNote: {},
-      notes: []
+      notes: [],
+      statusText: '笔记未改动',
+      isShowPreview: false
     }
   },
 
@@ -55,13 +69,40 @@ export default {
         }
       })
     Bus.$once('update:notes', val => {
-      this.curNote = val.find(note => note.id.toString() === this.$route.query.noteId.toString()) || {}
+      this.curNote = val.find(note => note.id.toString() === this.$route.query.noteId) || {}
     })
+  },
+
+  computed: {
+    previewContent () {
+      return md.render(this.curNote.content || '')
+    }
   },
 
   beforeRouteUpdate (to, from, next) {
     this.curNote = this.notes.find(note => note.id.toString() === to.query.noteId.toString()) || {}
     next()
+  },
+
+  methods: {
+    updateNote: _.debounce(function () {
+      Notes.updateNote({ noteId: this.curNote.id }, { title: this.curNote.title, content: this.curNote.content })
+        .then(data => {
+          this.statusText = '已保存'
+        }).catch(data => {
+          this.statusText = '保存出错'
+        })
+    }, 300),
+
+    deleteNote () {
+      Notes.deleteNote({ noteId: this.curNote.id })
+        .then(data => {
+          this.$message.success(data.msg)
+          this.notes.splice(this.notes.indexOf(this.curNote), 1)
+          this.$router.replace('/note')
+        })
+    }
+
   }
 }
 </script>
