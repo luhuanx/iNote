@@ -80,7 +80,7 @@ export default {
   },
 
   beforeRouteUpdate (to, from, next) {
-    this.curNote = this.notes.find(note => note.id.toString() === to.query.noteId.toString()) || {}
+    this.curNote = this.notes.find(note => note.id.toString() === to.query.noteId) || {}
     next()
   },
 

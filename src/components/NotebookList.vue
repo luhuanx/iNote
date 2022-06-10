@@ -32,7 +32,7 @@
 
 <script>
 import Auth from '@/apis/auth'
-import { mapState, mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'NotebookList',
