@@ -38,7 +38,6 @@
 </template>
 
 <script>
-import Auth from '@/apis/auth'
 import NoteSidebar from '@/components/NoteSidebar'
 import _ from 'lodash'
 import MarkdownIt from 'markdown-it'
@@ -59,12 +58,7 @@ export default {
   },
 
   created () {
-    Auth.getInfo()
-      .then(res => {
-        if (!res.isLogin) {
-          this.$router.push({ path: '/login' })
-        }
-      })
+    this.checkLogin({ path: '/login' })
   },
 
   computed: {
@@ -90,7 +84,8 @@ export default {
 
     ...mapActions([
       'updateNote',
-      'deleteNote'
+      'deleteNote',
+      'checkLogin'
     ]),
 
     onUpdateNote: _.debounce(function () {

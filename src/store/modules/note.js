@@ -11,7 +11,7 @@ const getters = {
 
   curNote: state => {
     if (!Array.isArray(state.notes)) return {}
-    if (!state.curNoteId) return state.notes[0]
+    if (!state.curNoteId) return state.notes[0] || {}
     // eslint-disable-next-line eqeqeq
     return state.notes.find(note => note.id == state.curNoteId) || {}
   }
@@ -57,7 +57,7 @@ const actions = {
   },
 
   updateNote ({commit}, {noteId, title, content}) {
-    return Notes.updateNote({noteId}, {title, content})
+    return Notes.updateNote({noteId, title, content})
       .then(res => {
         commit('updateNote', { noteId, title, content })
       })
