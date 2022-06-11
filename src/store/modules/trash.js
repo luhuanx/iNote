@@ -8,10 +8,17 @@ const state = {
 
 const getters = {
   trashNotes: state => state.trashNotes || [],
+
   curTrashNote: (state, getters) => {
     if (!state.curTrashNoteId) return getters.trashNotes[0] || {}
     // eslint-disable-next-line eqeqeq
     return state.trashNotes.find(note => note.id == state.curTrashNoteId) || {}
+  },
+
+  belongTo: (state, getters, rootState, rootGetters) => {
+    // eslint-disable-next-line eqeqeq
+    let notebook = rootGetters.notebooks.find(notebook => notebook.id == getters.curTrashNote.notebookId) || {}
+    return notebook.title || ''
   }
 }
 
@@ -26,7 +33,7 @@ const mutations = {
 
   deleteTrashNote (state, payload) {
     // eslint-disable-next-line eqeqeq
-    state.trashNotes = state.trashNotes.filter(note => note.id != payload.id)
+    state.trashNotes = state.trashNotes.filter(note => note.id != payload.noteId)
   },
 
   setCurTrashNote (state, payload) {

@@ -51,11 +51,11 @@ export default {
   name: 'TrashDetail',
   data () {
     return {
-      belongTo: '我的笔记本'
     }
   },
   created () {
     this.checkLogin({ path: '/login' })
+    this.getNotebooks()
     this.getTrashNotes()
       .then(() => {
         this.setCurTrashNote({ curTrashNoteId: this.$route.query.noteId })
@@ -65,12 +65,18 @@ export default {
   computed: {
     ...mapGetters([
       'trashNotes',
-      'curTrashNote'
+      'curTrashNote',
+      'belongTo'
     ]),
 
     compiledMarkdown () {
       return md.render(this.curTrashNote.content || '')
     }
+  },
+
+  beforeRouteUpdate (to, from, next) {
+    this.setCurTrashNote({ curTrashNoteId: to.query.noteId })
+    next()
   },
 
   methods: {
@@ -82,7 +88,8 @@ export default {
       'checkLogin',
       'deleteTrashNote',
       'revertTrashNote',
-      'getTrashNotes'
+      'getTrashNotes',
+      'getNotebooks'
     ]),
 
     onDelete () {
@@ -92,11 +99,6 @@ export default {
     onRevert () {
       this.revertTrashNote({ noteId: this.curTrashNote.id })
     }
-  },
-
-  beforeRouteUpdate (to, from, next) {
-    this.setCurTrashNote({ curTrashNoteId: to.query.noteId })
-    next()
   }
 
 }
