@@ -57,7 +57,7 @@ const actions = {
   },
 
   updateNote ({commit}, {noteId, title, content}) {
-    return Notes.updateNote({noteId, title, content})
+    return Notes.updateNote({noteId}, {title, content})
       .then(res => {
         commit('updateNote', { noteId, title, content })
       })
