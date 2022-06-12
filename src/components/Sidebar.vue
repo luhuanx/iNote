@@ -11,24 +11,23 @@
     </div>
     <div class="logout">
       <i class="iconfont icon-logout"
-         @click="logout"></i>
+         @click="onLogout"></i>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import avatar from './Avatar.vue'
-import Auth from '@/apis/auth'
 
 export default {
   components: { avatar },
 
   methods: {
-    logout () {
-      Auth.logout()
-        .then(data => {
-          this.$router.push({ path: 'login' })
-        })
+    ...mapActions(['logout']),
+
+    onLogout () {
+      this.logout({ path: '/login' })
     }
   }
 }

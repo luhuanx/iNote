@@ -10,10 +10,10 @@ const getters = {
   notes: state => state.notes || [],
 
   curNote: state => {
-    if (!Array.isArray(state.notes)) return {}
-    if (!state.curNoteId) return state.notes[0] || {}
+    if (!Array.isArray(state.notes)) return {title: '', content: ''}
+    if (!state.curNoteId) return state.notes[0] || {title: '', content: ''}
     // eslint-disable-next-line eqeqeq
-    return state.notes.find(note => note.id == state.curNoteId) || {}
+    return state.notes.find(note => note.id == state.curNoteId) || {title: '', content: ''}
   }
 }
 
@@ -36,7 +36,7 @@ const mutations = {
     state.notes = state.notes.filter(note => note.id !== payload.noteId)
   },
 
-  setCurNote (state, payload) {
+  setCurNote (state, payload = {}) {
     state.curNoteId = payload.curNoteId
   }
 }

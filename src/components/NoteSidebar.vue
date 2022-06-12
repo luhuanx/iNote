@@ -41,8 +41,6 @@ export default {
     }
   },
 
-  props: ['curNote'],
-
   created () {
     this.getNotebooks()
       .then(() => {
@@ -50,6 +48,13 @@ export default {
         return this.getNotes({ notebookId: this.curBook.id })
       }).then(() => {
         this.setCurNote({ curNoteId: this.$route.query.noteId })
+        this.$router.replace({
+          path: '/note',
+          query: {
+            noteId: this.curNote.id,
+            notebookId: this.curBook.id
+          }
+        })
       })
   },
 
@@ -57,7 +62,8 @@ export default {
     ...mapGetters([
       'notebooks',
       'notes',
-      'curBook'
+      'curBook',
+      'curNote'
     ])
   },
 
@@ -79,6 +85,16 @@ export default {
       }
       this.$store.commit('setCurBook', { curBookId: notebookId })
       this.getNotes({ notebookId })
+        .then(() => {
+          this.setCurNote({})
+          this.$router.replace({
+            path: '/note',
+            query: {
+              noteId: this.curNote.id,
+              notebookId: this.curBook.id
+            }
+          })
+        })
     },
 
     onAddNote () {

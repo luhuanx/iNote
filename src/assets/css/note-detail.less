@@ -48,14 +48,23 @@
   }
 
   .editor {
-    height: calc(100vh-70px);
+    height: ~"calc(100% - 70px)";
     position: relative;
+
+    .vue-codemirror {
+      height: ~"calc(100% - 25px)";
+
+      .CodeMirror {
+        height: 100%;
+        padding: 10px;
+      }
+    }
   }
   textarea,
   .preview {
     position: absolute;
     width: 100%;
-    min-height: 90vh;
+    height: 100%;
     padding: 20px;
   }
 

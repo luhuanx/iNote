@@ -36,7 +36,7 @@ const mutations = {
     state.trashNotes = state.trashNotes.filter(note => note.id != payload.noteId)
   },
 
-  setCurTrashNote (state, payload) {
+  setCurTrashNote (state, payload = {}) {
     state.curTrashNoteId = payload.curTrashNoteId
   }
 }
