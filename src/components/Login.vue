@@ -165,8 +165,7 @@ export default {
   display: flex;
   .main {
     flex: 1;
-    background: #36bc64
-      url(//cloud.hunger-valley.com/17-12-13/38476998.jpg-middle) center center
+    background: #36bc64 url('../assets/images/notebook.jpg') center center
       no-repeat;
     background-size: contain;
   }

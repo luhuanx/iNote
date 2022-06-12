@@ -4,9 +4,9 @@
     <note-sidebar @update:notes="val => notes = val"></note-sidebar>
     <div class="note-detail">
       <div class="note-empty"
-           v-show="!curBook.id">请创建笔记本</div>
+           v-show="!curBook.id">请创建笔记本后</div>
       <div class="note-empty"
-           v-show="!curNote.id">请选择或创建笔记</div>
+           v-show="!curNote.id">选择或创建笔记</div>
       <div class="note-detail-ct"
            v-show="curNote.id">
         <div class="note-bar">
@@ -69,7 +69,6 @@ export default {
         theme: 'neat',
         lineNumbers: false,
         line: true
-        // more codemirror options, 更多 codemirror 的高级配置...
       }
     }
   },

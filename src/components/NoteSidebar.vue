@@ -45,7 +45,7 @@ export default {
     this.getNotebooks()
       .then(() => {
         this.setCurBook({ curBookId: this.$route.query.notebookId })
-        return this.getNotes({ notebookId: this.curBook.id })
+        if (this.curBook.id) return this.getNotes({ notebookId: this.curBook.id })
       }).then(() => {
         this.setCurNote({ curNoteId: this.$route.query.noteId })
         this.$router.replace({

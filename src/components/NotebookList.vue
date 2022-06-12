@@ -21,7 +21,7 @@
                     @click.stop.prevent="onEdit(notebook)">编辑</span>
               <span class="action"
                     @click.stop.prevent="onDelete(notebook)">删除</span>
-              <span class="date">{{notebook.friendlyCreatedAt}}</span>
+              <span class="date">{{notebook.createdAtFriendly}}</span>
             </div>
           </router-link>
         </div>
